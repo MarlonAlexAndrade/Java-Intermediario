@@ -7,11 +7,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity 
+@Entity
 @Table(name = "pessoa")
 public class Pessoa {
+	// id, nome, email e idade
 	
-	@Id //Primary Key
+	@Id // Primary Key
 	@GeneratedValue(strategy = GenerationType.AUTO) // Auto Incremento
 	@Column(name = "id")
 	private long id;
@@ -21,17 +22,32 @@ public class Pessoa {
 	
 	@Column(name = "email")
 	private String email;
+	
+	@Column(name = "idade")
+	private int idade;
 
 	public Pessoa() {
-		super();
+		
 	}
 
-	public Pessoa(long id, String nome, String email) {
+	
+	public Pessoa(String nome, String email, int idade) {
 		super();
-		this.id = id;
 		this.nome = nome;
 		this.email = email;
+		this.idade = idade;
 	}
+
+
+	public int getIdade() {
+		return idade;
+	}
+
+
+	public void setIdade(int idade) {
+		this.idade = idade;
+	}
+
 
 	public long getId() {
 		return id;
@@ -56,6 +72,4 @@ public class Pessoa {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
 }

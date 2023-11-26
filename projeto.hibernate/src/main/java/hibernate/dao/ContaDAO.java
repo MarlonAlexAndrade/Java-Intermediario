@@ -1,77 +1,78 @@
 package hibernate.dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import hibernate.model.Conta;
 import hibernate.model.Pessoa;
 import hibernate.util.HibernateUtil;
 
-public class PessoaDAO {
-	
-	public Pessoa getPessoa(long id) {
+public class ContaDAO {
+	public Conta getContaById(long id) {
 		Transaction transaction = null;
-		Pessoa pessoa = null;
-		
-		try(Session session = HibernateUtil.getSession().openSession()) {
+		Conta conta = null;
+
+		try (Session session = HibernateUtil.getSession().openSession()) {
 			transaction = session.beginTransaction();
-			
-			pessoa = session.get(Pessoa.class, id);
-			
+
+			conta = session.get(Conta.class, id);
+			// SELECT * FROM conta WHERE id = 2;
+
 			transaction.commit();
-			
-			return pessoa;
+
 		} catch (Exception e) {
-			if(transaction != null) {
+			if (transaction != null) {
 				transaction.rollback();
 			}
 		}
-		return pessoa;
+		return conta;
 	}
-	
-	public void deletaPessoa(long id) {
+
+	public List<Conta> getContas() {
 		Transaction transaction = null;
-		Pessoa pessoa = null;
-		
-		try(Session session = HibernateUtil.getSession().openSession()) {
+		List<Conta> contas = null;
+
+		try (Session session = HibernateUtil.getSession().openSession()) {
 			transaction = session.beginTransaction();
-			
-			pessoa = session.get(Pessoa.class, id);
-			session.delete(pessoa);
-			
+
+			contas = session.createQuery("FROM Conta c").list();
+
 			transaction.commit();
-			
+
 		} catch (Exception e) {
-			if(transaction != null) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		}
+		return contas;
+	}
+
+	public void criaConta(Conta conta) {
+		Transaction transaction = null;
+
+		try (Session session = HibernateUtil.getSession().openSession()) {
+			transaction = session.beginTransaction();
+
+			session.save(conta);
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
 				transaction.rollback();
 			}
 		}
 	}
 	
-	public void alteraPessoa(Pessoa pessoa) {
+	public void alteraConta(Conta conta) {
 		Transaction transaction = null;
 		
 		try(Session session = HibernateUtil.getSession().openSession()) {
 			
 			transaction = session.beginTransaction();
 			
-			session.saveOrUpdate(pessoa);
-			
-			transaction.commit();
-		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
-		}
-	}
-	
-	public void criarPessoa(Pessoa pessoa) {
-		Transaction transaction = null;
-		
-		try(Session session = HibernateUtil.getSession().openSession()) {
-			
-			transaction = session.beginTransaction();
-			
-			session.save(pessoa);
+			session.update(conta);
 			
 			transaction.commit();
 		} catch (Exception e) {

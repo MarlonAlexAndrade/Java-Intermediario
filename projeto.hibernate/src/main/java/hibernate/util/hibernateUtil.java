@@ -8,20 +8,21 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
+import hibernate.model.Conta;
 import hibernate.model.Pessoa;
 
-public class hibernateUtil {
-
+public class HibernateUtil {
+	
 	private static SessionFactory sessionFactory;
-
+	
 	public static SessionFactory getSession() {
-		if (sessionFactory == null) {
-
+		if(sessionFactory == null) {
+			
 			try {
 				Configuration configuration = new Configuration();
-
+				
 				Properties properties = new Properties();
-
+				
 				// URL do banco de dados
 				properties.put(Environment.URL, "jdbc:mysql://localhost:3306/java");
 				properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
@@ -29,22 +30,26 @@ public class hibernateUtil {
 				properties.put(Environment.PASS, "admin");
 				properties.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
 				properties.put(Environment.SHOW_SQL, "true");
-				properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thred");
+				properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 				properties.put(Environment.HBM2DDL_AUTO, "update");
-
+				
+				
 				configuration.setProperties(properties);
+				
 				configuration.addAnnotatedClass(Pessoa.class);
-
+				configuration.addAnnotatedClass(Conta.class);
+				
 				ServiceRegistry registry = new StandardServiceRegistryBuilder()
 						.applySettings(configuration.getProperties()).build();
-
+				
 				sessionFactory = configuration.buildSessionFactory(registry);
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 		}
-
+		
 		return sessionFactory;
 	}
 }
